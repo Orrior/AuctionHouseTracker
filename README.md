@@ -17,5 +17,10 @@ TODO:
 3. Make models/repos for Database.
 4. Make so they store price data separate for each region/realm separately.
 5. Make so item data stored locally. 
-##### IMPLEMENTING AUTOMATIC REGULAR DATA REQUEST phase
+##### MIDDLE phase
 1. Make data polling every hour using background tasks feature: https://learn.microsoft.com/en-us/aspnet/core/fundamentals/host/hosted-services?view=aspnetcore-3.1&tabs=visual-studio
+2. Make so admin can request item (also make price request manually?)
+3. **IF EXTRA TIME!** Implement search for specific items or by categories?
+### LATE PHASE
+1. make visual table for items.
+2. **IF VERY EXTRA TIME!** try to implement wow-ish tooltips for items: https://www.wowhead.com/tooltips (I don't know Javascript so it will be really time-consuming.) 
