@@ -7,6 +7,12 @@ The purpose of the application is to track the history of prices in selected rea
 TODO:
 ##### REQUEST PHASE
 1. Add ability to make request to World of Warcraft API: https://develop.battle.net/documentation/world-of-warcraft/game-data-apis.
+	1.1 Get Oauth2.0 Token (Done!)
+	1.2 Add check whether token is still valid. (Done!)
+	1.3 Make request for price list
+	1.4 Parse Data.
+	1.5 Make requests for items data
+	1.5 Parse Data.
 2. Take All credentials that needed to make request working from **appsettings.json**
 3. Make so you can chose which realms and region you're going to request via **appsettings.json**
 4. Make SLOW item data requesting (8 requests/sec?) due to max request frequency limitation is 9 request/sec 
