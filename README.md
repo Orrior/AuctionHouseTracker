@@ -14,7 +14,8 @@ TODO:
 	1.4 Parse Data.(Done!)<br>
 	1.5 Make requests for commodity items data (realm-wise items)<br>
 	1.5 Make requests for non-commodity items data (realm-wise items)<br>
-	1.6 Parse Data. <br>
+	1.6 Get item info Data. <br>
+	1.7 Process all item info data from auction request. <br>
 2. Take All credentials that needed to make request working from **appsettings.json**
 3. Make so you can chose which realms and region you're going to request via **appsettings.json**
 4. Make SLOW item data requesting (8 requests/sec?) due to max request frequency limitation is 9 request/sec 
@@ -29,6 +30,6 @@ TODO:
 1. Make data polling every hour using background tasks feature: https://learn.microsoft.com/en-us/aspnet/core/fundamentals/host/hosted-services?view=aspnetcore-3.1&tabs=visual-studio
 2. Make so admin can request item (also make price request manually?)
 3. **IF EXTRA TIME!** Implement search for specific items or by categories?
-### LATE PHASE
+##### LATE PHASE
 1. make visual table for items.
 2. **IF VERY EXTRA TIME!** try to implement wow-ish tooltips for items: https://www.wowhead.com/tooltips (I don't know Javascript so it will be really time-consuming.) 
