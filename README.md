@@ -9,9 +9,11 @@ TODO:
 1. Add ability to make request to World of Warcraft API: https://develop.battle.net/documentation/world-of-warcraft/game-data-apis. <br>
 	1.1 Get Oauth2.0 Token (Done!) <br>
 	1.2 Add check whether token is still valid. (Done!) <br>
-	1.3 Make request for price list <br>
-	1.4 Parse Data. <br>
-	1.5 Make requests for items data <br>
+	1.3 Make request price list for non-commodity items<br>(Done!)
+	1.3 Make request price list for commodity items<br>(Done!)
+	1.4 Parse Data. <br>(Done!)
+	1.5 Make requests for commodity items data (realm-wise items)<br>
+	1.5 Make requests for non-commodity items data (realm-wise items)<br>
 	1.6 Parse Data. <br>
 2. Take All credentials that needed to make request working from **appsettings.json**
 3. Make so you can chose which realms and region you're going to request via **appsettings.json**

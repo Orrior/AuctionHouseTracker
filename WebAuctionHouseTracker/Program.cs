@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 using Microsoft.EntityFrameworkCore;
@@ -8,13 +9,29 @@ using WebApplication1.Utils;
 Console.WriteLine("====================");
 Console.WriteLine("====================");
 Console.WriteLine("====================");
-Console.WriteLine("HELLO TEST WORLD!");
-string token = WoWAuthenticator.GetToken().Result;
+Console.WriteLine("DEBUG START");
+// string token = WoWAuthenticator.GetToken().Result;
+string token = "EUEL1OgufxTQWkPCcRMZ3SsAWbhwUfNXgC";
 Console.WriteLine($"token: {token}");
-// string token = "EU33onqLlTGYS3b6FdCsXq2CJh9omYHJF9";
-Console.WriteLine(WoWAuthenticator.CheckToken(token).Result);
-Console.WriteLine("====================");
-Console.WriteLine("====================");
+Console.WriteLine($"CHECK TOKEN VALIDITY: {WoWAuthenticator.CheckToken(token).Result}");
+
+List < WowAuthenticatorHelper.AuctionSlot > test;
+DateTime timer;
+
+Console.WriteLine("START COMMODITIES REQUEST");
+
+timer = DateTime.Now;
+test = WoWAuthenticator.GetNonCommodities(token).Result;
+Console.WriteLine($"GET NON-COMMODITY OBJECTS FROM AH: {test.Count}");
+Console.WriteLine($"TIME TOOK:{(DateTime.Now - timer).Milliseconds} ms");
+Console.WriteLine("START NON COMMODITIES REQUEST");
+
+timer = DateTime.Now;
+test = WoWAuthenticator.GetCommodities(token).Result;
+Console.WriteLine($"GET COMMODITY OBJECTS FROM AH: {test.Count}");
+Console.WriteLine($"TIME TOOK:{(DateTime.Now - timer).Milliseconds} ms");
+
+
 Console.WriteLine("====================");
 
 var builder = WebApplication.CreateBuilder(args);
