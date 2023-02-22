@@ -18,6 +18,11 @@
         <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.0" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.0" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.0" />
+        <PackageReference Include="RestSharp" Version="109.0.0-preview.2" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Repos" />
     </ItemGroup>
 
 </Project>

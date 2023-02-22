@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "85tNaLxC9MLNzIMVWkampmTJq1eVuzp9sbIkwjq6lGCAckVHuKvLMnBUrDJgHuNJGvhRC9ih9sEgCVjiSP3mDA==",
+  "dgSpecHash": "m9yx85iCfsd8yaF6vNUGAww7GBjAnyjLXbxNOVmUo0TJVOUEUbqsGwuIDxcF1j2jS5SVoLhPpNQelV7i8QwoQw==",
   "success": true,
   "projectFilePath": "R:\\AuctionHouseTracker\\WebAuctionHouseTracker\\WebAuctionHouseTracker.csproj",
   "expectedPackageFiles": [
@@ -33,6 +33,7 @@
     "C:\\Users\\Admin\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\6.0.0\\microsoft.extensions.logging.abstractions.6.0.0.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\microsoft.extensions.options\\6.0.0\\microsoft.extensions.options.6.0.0.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\microsoft.extensions.primitives\\6.0.0\\microsoft.extensions.primitives.6.0.0.nupkg.sha512",
+    "C:\\Users\\Admin\\.nuget\\packages\\restsharp\\109.0.0-preview.2\\restsharp.109.0.0-preview.2.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\sqlitepclraw.bundle_e_sqlite3\\2.0.6\\sqlitepclraw.bundle_e_sqlite3.2.0.6.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\sqlitepclraw.core\\2.0.6\\sqlitepclraw.core.2.0.6.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\sqlitepclraw.lib.e_sqlite3\\2.0.6\\sqlitepclraw.lib.e_sqlite3.2.0.6.nupkg.sha512",

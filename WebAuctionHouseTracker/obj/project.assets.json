@@ -504,6 +504,19 @@
           "buildTransitive/netcoreapp3.1/_._": {}
         }
       },
+      "RestSharp/109.0.0-preview.2": {
+        "type": "package",
+        "compile": {
+          "lib/net6.0/RestSharp.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/RestSharp.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "SQLitePCLRaw.bundle_e_sqlite3/2.0.6": {
         "type": "package",
         "dependencies": {
@@ -1402,6 +1415,26 @@
         "useSharedDesignerContext.txt"
       ]
     },
+    "RestSharp/109.0.0-preview.2": {
+      "sha512": "iAUpv2oyZATNvfDUqt+Bpfe3wJrPtgXIyD3wyIhGnHo5w0Y11Sw3PtEpOfIgEUATyX258x5R4yAPNFQjm4wRhA==",
+      "type": "package",
+      "path": "restsharp/109.0.0-preview.2",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net471/RestSharp.dll",
+        "lib/net471/RestSharp.xml",
+        "lib/net6.0/RestSharp.dll",
+        "lib/net6.0/RestSharp.xml",
+        "lib/net7.0/RestSharp.dll",
+        "lib/net7.0/RestSharp.xml",
+        "lib/netstandard2.0/RestSharp.dll",
+        "lib/netstandard2.0/RestSharp.xml",
+        "restsharp.109.0.0-preview.2.nupkg.sha512",
+        "restsharp.nuspec",
+        "restsharp.png"
+      ]
+    },
     "SQLitePCLRaw.bundle_e_sqlite3/2.0.6": {
       "sha512": "zssYqiaucyGArZfg74rJuzK0ewgZiidsRVrZTmP7JLNvK806gXg6PGA46XzoJGpNPPA5uRcumwvVp6YTYxtQ5w==",
       "type": "package",
@@ -1691,7 +1724,8 @@
       "Microsoft.AspNetCore.Identity.EntityFrameworkCore >= 6.0.0",
       "Microsoft.AspNetCore.Identity.UI >= 6.0.0",
       "Microsoft.EntityFrameworkCore.Sqlite >= 6.0.0",
-      "Microsoft.EntityFrameworkCore.Tools >= 6.0.0"
+      "Microsoft.EntityFrameworkCore.Tools >= 6.0.0",
+      "RestSharp >= 109.0.0-preview.2"
     ]
   },
   "packageFolders": {
@@ -1752,6 +1786,10 @@
           "Microsoft.EntityFrameworkCore.Tools": {
             "target": "Package",
             "version": "[6.0.0, )"
+          },
+          "RestSharp": {
+            "target": "Package",
+            "version": "[109.0.0-preview.2, )"
           }
         },
         "imports": [
