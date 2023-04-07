@@ -2,51 +2,38 @@ using System.Text.Json;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 using Microsoft.EntityFrameworkCore;
-using WebApplication1.Data;
+using WebApplication1.Mapping;
+using WebApplication1.Migrations;
+using WebApplication1.Models;
 using WebApplication1.Services;
+using WebApplication1.Services.BackgroundServices;
+using WebApplication1.Tests;
 using WebApplication1.Utils;
-
-Console.WriteLine("====================");
-Console.WriteLine("====================");
-Console.WriteLine("====================");
-Console.WriteLine("DEBUG START");
-// string token = WoWAuthenticator.GetToken().Result;
-string token = "EUEL1OgufxTQWkPCcRMZ3SsAWbhwUfNXgC";
-Console.WriteLine($"token: {token}");
-Console.WriteLine($"CHECK TOKEN VALIDITY: {WoWAuthenticator.CheckToken(token).Result}");
-
-List < WowAuthenticatorHelper.AuctionSlot > test;
-DateTime timer;
-
-Console.WriteLine("START COMMODITIES REQUEST");
-
-timer = DateTime.Now;
-test = WoWAuthenticator.GetNonCommodities(token).Result;
-Console.WriteLine($"GET NON-COMMODITY OBJECTS FROM AH: {test.Count}");
-Console.WriteLine($"TIME TOOK:{(DateTime.Now - timer).Milliseconds} ms");
-Console.WriteLine("START NON COMMODITIES REQUEST");
-
-timer = DateTime.Now;
-test = WoWAuthenticator.GetCommodities(token).Result;
-Console.WriteLine($"GET COMMODITY OBJECTS FROM AH: {test.Count}");
-Console.WriteLine($"TIME TOOK:{(DateTime.Now - timer).Milliseconds} ms");
-
-
-Console.WriteLine("====================");
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+builder.Services.AddTransient<IAuctionRequests, AuctionRequests>();
 
+var connectionString = builder.Configuration.GetConnectionString("NpgsqlConnection");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlite(connectionString));
+    options.UseNpgsql(connectionString));
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
+
+// Add Mapper
+builder.Services.AddAutoMapper(typeof(AuctionMappingProfile));
+
+// Add Background Services.
+builder.Services.AddHostedService<ItemInfoService>();
+
+
+//TODO!!!! Uncomment this!
+// builder.Services.AddHostedService<ItemPriceRequestService>();
 
 var app = builder.Build();
 
