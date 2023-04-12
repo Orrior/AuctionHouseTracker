@@ -20,7 +20,7 @@ public class AuctionMappingProfile : Profile
                 b => b.MapFrom(
                     src => src.Item.Id));
 
-        //In favor of speed, commodity and non-commodity info items are separated to two different tables,
+        //In favor of speed of database, commodity and non-commodity info items are separated to two different tables,
         //to avoid confusion we use two different classes with similar properties.
         CreateMap<WowAuthenticatorRecords.ItemInfo, CommodityInfo>()
             .ForMember(dest => dest.ItemClass, 

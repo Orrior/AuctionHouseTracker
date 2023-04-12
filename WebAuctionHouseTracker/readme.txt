@@ -7,12 +7,12 @@ dotnet ef Migrations add Initial
 
 migrationBuilder.Sql(
 "SELECT create_hypertable( '\"CommodityAuctions\"', 'TimeStamp');\n" +
-"CREATE INDEX ix_commodity_timestamp ON \"CommodityAuctions\" (\"CommodityId\", \"TimeStamp\" DESC)"
+"CREATE INDEX ix_commodity_timestamp ON \"CommodityAuctions\" (\"ItemId\", \"TimeStamp\" DESC)"
 );
 
 migrationBuilder.Sql(
 "SELECT create_hypertable( '\"NonCommodityAuctions\"', 'TimeStamp');\n" +
-"CREATE INDEX ix_noncommodity_timestamp ON \"NonCommodityAuctions\" (\"NonCommodityId\", \"TimeStamp\" DESC)"
+"CREATE INDEX ix_noncommodity_timestamp ON \"NonCommodityAuctions\" (\"ItemId\", \"TimeStamp\" DESC)"
 );
 
 3. Update Database

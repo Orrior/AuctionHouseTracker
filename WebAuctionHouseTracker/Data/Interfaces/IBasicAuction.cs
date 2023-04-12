@@ -5,7 +5,7 @@ public abstract class IBasicAuction
     public interface IAuctionInfo
     {
         //TODO!!! Maybe long, not int?
-        public int Id { get; set; }
+        public long Id { get; set; }
         public string Name { get; set; }
         public string ItemClass { get; set; }
         public string ItemSubClass { get; set; }
@@ -14,7 +14,7 @@ public abstract class IBasicAuction
     public interface IAuctionSlot
     {
         //TODO!!! Maybe long, not int?
-        public int ItemId { get; set; }
+        public long ItemId { get; set; }
         public int Quantity { get; set; }
         public string TimeLeft { get; set; }
         //TODO! Creation condition if initialized first time.

@@ -11,15 +11,4 @@ public class CommoditiesRepository
     {
         _dbContext = dbContext;
     }
-
-    public async void Add(CommodityAuction commodityAuction)
-    {
-        //TODO! Add only unique objects.
-        
-        var test = _dbContext.CommodityAuctions;
-
-
-        return;
-        
-    }
 }

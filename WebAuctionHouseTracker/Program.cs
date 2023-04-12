@@ -6,6 +6,7 @@ using WebApplication1.Mapping;
 using WebApplication1.Migrations;
 using WebApplication1.Models;
 using WebApplication1.Services;
+using WebApplication1.Services.Auction;
 using WebApplication1.Services.BackgroundServices;
 using WebApplication1.Tests;
 using WebApplication1.Utils;
@@ -29,10 +30,8 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddAutoMapper(typeof(AuctionMappingProfile));
 
 // Add Background Services.
-builder.Services.AddHostedService<ItemInfoService>();
-
-
 //TODO!!!! Uncomment this!
+// builder.Services.AddHostedService<ItemInfoService>();
 // builder.Services.AddHostedService<ItemPriceRequestService>();
 
 var app = builder.Build();

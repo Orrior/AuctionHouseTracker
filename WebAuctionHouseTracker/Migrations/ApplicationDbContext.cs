@@ -24,7 +24,9 @@ public class ApplicationDbContext : IdentityDbContext
         
         modelBuilder.Entity<CommodityAuction>()
             .HasKey(x => new{ CommodityId = x.ItemId,x.TimeStamp});
-            
+
+        modelBuilder.Entity<CommodityInfo>()
+            .HasKey(x => x.Id);
         // modelBuilder.Entity<CommodityAuction>()
         //     .HasOne(x => x.CommodityInfo)
         //     .WithMany()
@@ -32,7 +34,9 @@ public class ApplicationDbContext : IdentityDbContext
 
         modelBuilder.Entity<NonCommodityAuction>()
             .HasKey(x => new{ NonCommodityId = x.ItemId,x.TimeStamp});
-        
+
+        modelBuilder.Entity<NonCommodityInfo>()
+            .HasKey(x => x.Id);
         // modelBuilder.Entity<NonCommodityAuction>()
         //     .HasOne(x => x.NonCommodityInfo)
         //     .WithMany()

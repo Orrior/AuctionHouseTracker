@@ -1,10 +1,11 @@
-﻿using AutoMapper;
+﻿using System.Text.Json;
+using AutoMapper;
 using RestSharp;
 using RestSharp.Authenticators.OAuth2;
 using WebApplication1.Models;
 using WebApplication1.Utils;
 
-namespace WebApplication1.Services;
+namespace WebApplication1.Services.Auction;
 
 public class AuctionRequests : IAuctionRequests
 {
@@ -108,6 +109,7 @@ public class AuctionRequests : IAuctionRequests
     //TODO!
     public async Task<List<CommodityInfo>> GetCommodityInfos() {
         
+        //TODO Remove range copy!
         var comItems = await GetCheapestCommodities();
 
         var itemInfos = await GetItemInfos(comItems.Select(x => x.Item.Id).ToList());
@@ -143,8 +145,7 @@ public class AuctionRequests : IAuctionRequests
         try
         {
             response = client
-                .Get<
-                    WowAuthenticatorRecords.ItemInfo>(
+                .Get<WowAuthenticatorRecords.ItemInfo>(
                     request); //TODO!!! Make record for this thing. We don't need so much data!!!.
         }
         catch (Exception e)
@@ -153,7 +154,7 @@ public class AuctionRequests : IAuctionRequests
 
             response = null;
         }
-
+        
         return response;
     }
 
@@ -181,24 +182,28 @@ public class AuctionRequests : IAuctionRequests
             try
             {
                 res = client.Get<WowAuthenticatorRecords.ItemInfo>(request);
+
+                if (res.Name == null)
+                {
+                    _logger.LogError($"Item with id'{itemId}' wasn't found.");
+                    continue;
+                }
+                
                 itemInfos.Add(res);
             }
             catch (Exception e)
             {
-                _logger.LogError($"AN ERROR HAS OCCURED WITH AN ITEM ID \"{itemId}\". \r\n {e.Message}");
-
-                res = GetItemInfo(itemId);
+                _logger.LogError($"Something went wrong with item \"{itemId}\". \r\n {e.Message}");
+                res = GetItemInfo(itemId); //If error was caused due to API bottleneck, try to fetch again, but slowly.
                 if (res != null)
                 {
                     itemInfos.Add(res);
                 }
 
             }
-
-            _logger.LogInformation($"PROGRESS: {i + 1}/{itemIds.Count}");
-
+            _logger.LogDebug($"PROGRESS: {i + 1}/{itemIds.Count}");
         }
-
+        _logger.LogInformation($"Items scanning has finished! Scanned {itemInfos.Count}/{itemIds.Count} items!");
         return itemInfos;
     }
 }

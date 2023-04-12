@@ -11,4 +11,5 @@ public interface IAuctionRequests
     public Task<List<WowAuthenticatorRecords.ItemInfo>> GetItemInfos(List<long> itemIds);
     public WowAuthenticatorRecords.ItemInfo? GetItemInfo(long itemId);
     public Task<List<CommodityInfo>> GetCommodityInfos();
+    public Task<List<NonCommodityInfo>> GetNonCommodityInfos(string realmId);
 }
