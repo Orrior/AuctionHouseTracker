@@ -1,6 +1,7 @@
-﻿using WebApplication1.Utils;
+﻿using WebApplication1.Models;
+using WebApplication1.Utils;
 
-namespace WebApplication1.Models;
+namespace WebApplication1.Interfaces;
 
 public interface IAuctionRequests
 {
@@ -12,4 +13,5 @@ public interface IAuctionRequests
     public WowAuthenticatorRecords.ItemInfo? GetItemInfo(long itemId);
     public Task<List<CommodityInfo>> GetCommodityInfos();
     public Task<List<NonCommodityInfo>> GetNonCommodityInfos(string realmId);
+    public List<WowAuthenticatorRecords.RealmData> GetRealmNames();
 }

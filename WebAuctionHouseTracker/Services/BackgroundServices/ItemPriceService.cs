@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using WebApplication1.Interfaces;
 using WebApplication1.Migrations;
 using WebApplication1.Models;
 using WebApplication1.Utils;
@@ -45,6 +46,8 @@ public class ItemPriceRequestService : BackgroundService
             //Create scope and DB
             await using var scope = _serviceScopeFactory.CreateAsyncScope();
             var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+            var time = DateTime.Now;
+            var timeStamp = new DateTime(time.Year, time.Month, time.Day, time.Hour, 0, 0, 0);
             
             //TODO UNCOMMENT!!!
             
@@ -52,20 +55,27 @@ public class ItemPriceRequestService : BackgroundService
             var commodities = _auctionRequests.GetCheapestCommodities().Result
                 .Select(x => _mapper.Map<CommodityAuction>(x)).ToList();
             
+            commodities.ForEach(x => x.TimeStamp = timeStamp);
+            
             _logger.LogDebug("Commodities prices are saved!");
             
             //save commodities
-            await context.CommodityAuctions.AddRangeAsync(commodities);
-            await context.SaveChangesAsync();
+            // await context.CommodityAuctions.AddRangeAsync(commodities);
+            // await context.SaveChangesAsync();
             
             //start for-loop for each region to be scanned and saved.
             foreach (var realmId in _realms)
             {
                 _logger.LogInformation($"Scanning non-commodities for realm with id {realmId}...");
                 
+                //TODO!! Add method for this in AuctionRequests, аand assign realm.
                 var nonCommodities = _auctionRequests.GetCheapestNonCommodities(realmId).Result
                     .Select(x => _mapper.Map<NonCommodityAuction>(x)).ToList();
-            
+
+                nonCommodities.ForEach(x => x.TimeStamp = timeStamp);
+
+                Console.WriteLine(nonCommodities.Count);
+                
                 await context.NonCommodityAuctions.AddRangeAsync(nonCommodities);
                 await context.SaveChangesAsync();
                 

@@ -1,10 +1,9 @@
 ﻿using WebApplication1.Migrations;
 using WebApplication1.Models;
-using WebApplication1.Models.IRepos;
 
 namespace WebApplication1.Repos;
 
-public class CommodityInfos: ICommodityInfos
+public class CommodityInfos
 {
     private ApplicationDbContext _dbContext;
 

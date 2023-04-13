@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
+using WebApplication1.Interfaces;
 
 namespace WebApplication1.Models;
 

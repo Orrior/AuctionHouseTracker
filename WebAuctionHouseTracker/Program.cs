@@ -2,6 +2,7 @@ using System.Text.Json;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 using Microsoft.EntityFrameworkCore;
+using WebApplication1.Interfaces;
 using WebApplication1.Mapping;
 using WebApplication1.Migrations;
 using WebApplication1.Models;
@@ -14,6 +15,7 @@ using WebApplication1.Utils;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddScoped<IAuctionSlots, AuctionSlots>();
 builder.Services.AddTransient<IAuctionRequests, AuctionRequests>();
 
 var connectionString = builder.Configuration.GetConnectionString("NpgsqlConnection");
@@ -32,7 +34,7 @@ builder.Services.AddAutoMapper(typeof(AuctionMappingProfile));
 // Add Background Services.
 //TODO!!!! Uncomment this!
 // builder.Services.AddHostedService<ItemInfoService>();
-// builder.Services.AddHostedService<ItemPriceRequestService>();
+builder.Services.AddHostedService<ItemPriceRequestService>();
 
 var app = builder.Build();
 
@@ -44,7 +46,6 @@ if (app.Environment.IsDevelopment())
 else
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 

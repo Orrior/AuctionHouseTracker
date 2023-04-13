@@ -1,0 +1,49 @@
+﻿@using WebApplication1.Utils
+@model List<WebApplication1.Models.Web.AuctionSlot>
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>title</title>
+    <script>const wowhead_tooltips = { "colorlinks": true, "iconizelinks": true, "renamelinks": false, "hide": { "logo": true } }</script>
+    <script src="https://wow.zamimg.com/js/tooltips.js"></script>
+</head>
+<body>
+<div>
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>realm</th>
+            <th align="right">Price</th>
+            <th>Bid</th>
+            <th>Quantity</th>
+            <th>Time Left</th>
+            <th>Category</th>
+            <th>Subcategory</th>
+            <th>Price change</th>
+        </tr>
+        
+            @foreach (var auction in Model)
+            {
+                <tr>
+                    <td><a href="index" data-wowhead="item=@auction.ItemId">@auction.Name</a></td>
+                    <td>@auction.RealmId</td>
+                    <td>@AuctionSlotHelper.MoneyHumaniser(auction.Price)</td>
+                    <td>@auction.Bid</td>
+                    <td>@auction.Quantity</td>
+                    <td>@auction.TimeLeft</td>
+                    <td>@auction.Category</td>
+                    <td>@auction.SubCategory</td>
+                    <td>TBD</td>
+                </tr>
+            }
+        
+    </table>
+</div>
+</body>
+</html>

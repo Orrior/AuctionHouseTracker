@@ -2,6 +2,7 @@
 using AutoMapper;
 using RestSharp;
 using RestSharp.Authenticators.OAuth2;
+using WebApplication1.Interfaces;
 using WebApplication1.Models;
 using WebApplication1.Utils;
 
@@ -31,6 +32,18 @@ public class AuctionRequests : IAuctionRequests
         _baseUrl = $"https://{_region}.api.blizzard.com";
     }
 
+    public List<WowAuthenticatorRecords.RealmData> GetRealmNames()
+    {
+        var options = new RestClientOptions(_baseUrl)
+            { Authenticator = new OAuth2AuthorizationRequestHeaderAuthenticator(_token, "Bearer") };
+        var client = new RestClient(options);
+        var request = new RestRequest($"/data/wow/realm/index");
+        request.AddParameter("namespace", $"dynamic-{_region}");
+        request.AddParameter("locale", _locale);
+
+        return client.Get<WowAuthenticatorRecords.Realms>(request).realms;
+    }
+    
     public async Task<List<WowAuthenticatorRecords.AuctionSlotNonCommodity>> GetNonCommodities(string realmId)
     {
         //NB!!! Result of this will be unique for each realm! Only commodities are cross-realm!
@@ -41,8 +54,19 @@ public class AuctionRequests : IAuctionRequests
         request.AddParameter("namespace", $"dynamic-{_region}");
         request.AddParameter("locale", _locale);
 
-        return (await client.GetAsync<WowAuthenticatorRecords.AuctionRequestNonCommodity>(request))?.AuctionSlots
-               ?? new List<WowAuthenticatorRecords.AuctionSlotNonCommodity>();
+        var answer = client.Get<Dictionary<string,Object>>(request);
+
+        Console.WriteLine("AAAA");
+        Console.WriteLine("AAAA");
+        Console.WriteLine("AAAA");
+        Console.WriteLine("AAAA");
+        Console.WriteLine(JsonSerializer.Serialize(answer));
+
+        var result = (await client.GetAsync<WowAuthenticatorRecords.AuctionRequestNonCommodity>(request))?.AuctionSlots
+                     ?? new List<WowAuthenticatorRecords.AuctionSlotNonCommodity>();
+
+
+        return result;
     }
 
     public async Task<List<WowAuthenticatorRecords.AuctionSlotCommodity>> GetCommodities()
@@ -62,20 +86,23 @@ public class AuctionRequests : IAuctionRequests
     public async Task<List<WowAuthenticatorRecords.AuctionSlotNonCommodity>> GetCheapestNonCommodities(string realmId)
     {
         var nonCommodities = await GetNonCommodities(realmId);
+
         var dict = new Dictionary<long, WowAuthenticatorRecords.AuctionSlotNonCommodity>();
 
         //TODO! Premature optimisation is the root of all evil.
-        foreach (var commodity in nonCommodities)
+        foreach (var nonCommodity in nonCommodities)
         {
-            var itemId = commodity.Item.Id;
-
+            var itemId = nonCommodity.Item.Id;
+            var item = nonCommodity;
+            item.realmId = Int64.Parse(realmId);
+            
             if (!dict.ContainsKey(itemId))
             {
-                dict.Add(itemId, commodity);
+                dict.Add(itemId, nonCommodity);
             }
-            else if (dict[itemId].BuyOut > commodity.BuyOut)
+            else if (dict[itemId].BuyOut > nonCommodity.BuyOut)
             {
-                dict[itemId] = commodity;
+                dict[itemId] = nonCommodity;
             }
         }
 
@@ -183,7 +210,7 @@ public class AuctionRequests : IAuctionRequests
             {
                 res = client.Get<WowAuthenticatorRecords.ItemInfo>(request);
 
-                if (res.Name == null)
+                if (res?.Name == null)
                 {
                     _logger.LogError($"Item with id'{itemId}' wasn't found.");
                     continue;

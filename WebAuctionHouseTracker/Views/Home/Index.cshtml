@@ -1,4 +1,6 @@
-﻿@{
+﻿@using WebApplication1.Models.Web
+@model WebApplication1.Models.Web.RealmsModel
+@{
     ViewData["Title"] = "Home Page";
 }
 <head>
@@ -9,6 +11,30 @@
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
-    <p>TEST LINK TO WOWHEAD ITEM: <a href="index" data-wowhead="item=19019">TEST TEXT</a></p>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    @if (Model.RealmsAreSet)
+    {
+        <p> Choose your realm:</p>
+        @foreach (var realm in Model.Realms)
+        {
+            <p><a asp-controller="Auction" asp-route-realmId="@realm.Key">@realm.Value</a></p>
+        }
+    }
+    else
+    {
+        <p>Realms are not set in config! Here list of all realms:</p>
+        <table>
+            <tr>
+                <th>Realm name</th>
+                <th>Realm id</th>
+            </tr>
+            @foreach (var realm in Model.Realms)
+            {
+                <tr>
+                    <td>@realm.Value</td>
+                    <td>@realm.Key</td>
+                </tr>
+            }
+        </table>
+    }
+    
 </div>

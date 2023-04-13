@@ -77,6 +77,8 @@ public abstract class WowAuthenticatorRecords
         // Buyout prices only in non-commodities
         public long BuyOut { get; init; }
         
+        public long realmId { get; set; }
+        
         [JsonPropertyName("bid")]
         // Buyout prices only in non-commodities
         public long Bid { get; init; }
@@ -106,5 +108,19 @@ public abstract class WowAuthenticatorRecords
     {
         [JsonPropertyName("auctions")]
         public List<AuctionSlotNonCommodity> AuctionSlots { get; init; }
+    }
+
+    public record Realms
+    {
+        [JsonPropertyName("realms")]
+        public List<RealmData> realms { get; init; }
+    }
+    public record RealmData
+    {
+        [JsonPropertyName("name")]
+        public string Name { get; init; }
+        
+        [JsonPropertyName("id")]
+        public long id { get; init; }
     }
 }
