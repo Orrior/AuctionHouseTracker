@@ -39,8 +39,10 @@ public class ItemPriceRequestService : BackgroundService
     {
         _logger.LogInformation("Starting {jobName}", nameof(ItemPriceRequestService));
         var timer1 = DateTime.Now;
+        var timer2 = DateTime.Now;
         while (!stoppingToken.IsCancellationRequested)
         {
+            timer1 = DateTime.Now;
             _logger.LogInformation("Starting price lists update...");
             
             //Create scope and DB
@@ -60,9 +62,12 @@ public class ItemPriceRequestService : BackgroundService
             _logger.LogDebug("Commodities prices are saved!");
             
             //save commodities
-            // await context.CommodityAuctions.AddRangeAsync(commodities);
-            // await context.SaveChangesAsync();
-            
+            await context.CommodityAuctions.AddRangeAsync(commodities);
+            await context.SaveChangesAsync();
+
+            commodities.Clear();
+            commodities.TrimExcess();
+
             //start for-loop for each region to be scanned and saved.
             foreach (var realmId in _realms)
             {
@@ -79,12 +84,20 @@ public class ItemPriceRequestService : BackgroundService
                 await context.NonCommodityAuctions.AddRangeAsync(nonCommodities);
                 await context.SaveChangesAsync();
                 
+                
+                
                 _logger.LogDebug($"Non-commodities prices for id '{realmId}' are saved!");
+                timer2 = DateTime.Now;
             }
             
-            var timer2 = DateTime.Now;
             
-            _logger.LogInformation($"All prices are saved in {timer2-timer1}! Next scan will be in 1 hour.");
+            
+            
+            
+            _logger.LogInformation($"===TOTAL SAVED=== " + 
+                                   $"\r\n commodities:{context.CommodityAuctions.Count()} items" + 
+                                   $"\r\n non-commodities: {context.NonCommodityAuctions.Count()} items " +
+                                   $"\r\n All prices are saved in {timer2-timer1}! Next scan will be in 1 hour.");
             await Task.Delay(3_600_000, stoppingToken);
         }
     }

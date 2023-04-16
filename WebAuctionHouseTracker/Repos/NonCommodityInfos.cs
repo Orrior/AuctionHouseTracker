@@ -34,6 +34,8 @@ public class NonCommodityInfos
         for (int i = 0; i < nonCommodityInfoList.Count; i++)
         {
             var alreadyInDatabase = _dbContext.NonCommodityInfos.Any(x => x.Id == nonCommodityInfoList[i].Id);
+            //TODO!!! Rework, try to check by list if objects already in database...
+            
             
             if (alreadyInDatabase)
             {

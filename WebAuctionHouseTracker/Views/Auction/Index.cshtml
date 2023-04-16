@@ -1,8 +1,8 @@
 ﻿@using WebApplication1.Utils
-@model List<WebApplication1.Models.Web.AuctionSlot>
+@model WebApplication1.Models.Web.AuctionSlotModel
 
 @{
-    Layout = null;
+    // Layout = null;
 }
 
 <!DOCTYPE html>
@@ -10,40 +10,59 @@
 <html>
 <head>
     <title>title</title>
-    <script>const wowhead_tooltips = { "colorlinks": true, "iconizelinks": true, "renamelinks": false, "hide": { "logo": true } }</script>
+    <script>const wowhead_tooltips = { "colorlinks": true, "iconizelinks": true, "renamelinks": false }</script>
     <script src="https://wow.zamimg.com/js/tooltips.js"></script>
 </head>
 <body>
 <div>
-    <table>
+    <form asp-action="Index">
+        <label for="itemInput">Item Name:</label>
+        <input type="text" name="itemName" id="itemInput" value="@Model?.itemName"/>
+        <input type="submit" value="Submit">
+    </form>
+    <br/>
+</div>
+
+<div>
+    <table align="center" class="table-bordered">
         <tr>
             <th>Name</th>
-            <th>realm</th>
-            <th align="right">Price</th>
-            <th>Bid</th>
-            <th>Quantity</th>
-            <th>Time Left</th>
+            <th width="15%">Price</th>
+            <th width="15%">Bid</th>
+            <th width="7%">Quantity</th>
+            <th width="15%">Time Left</th>
             <th>Category</th>
             <th>Subcategory</th>
-            <th>Price change</th>
         </tr>
-        
-            @foreach (var auction in Model)
-            {
-                <tr>
-                    <td><a href="index" data-wowhead="item=@auction.ItemId">@auction.Name</a></td>
-                    <td>@auction.RealmId</td>
-                    <td>@AuctionSlotHelper.MoneyHumaniser(auction.Price)</td>
-                    <td>@auction.Bid</td>
-                    <td>@auction.Quantity</td>
-                    <td>@auction.TimeLeft</td>
-                    <td>@auction.Category</td>
-                    <td>@auction.SubCategory</td>
-                    <td>TBD</td>
-                </tr>
-            }
-        
+        @foreach (var auction in Model.AuctionSlots)
+        {
+            <tr>
+                <td><a asp-controller="Item" asp-route-realmId="@Model.realmId" asp-route-itemId="@auction.ItemId" data-wowhead="item=@auction.ItemId">@auction.Name</a></td>
+                <td align="right">@AuctionSlotHelper.MoneyHumaniser(auction.Price)</td>
+                <td align="right">@AuctionSlotHelper.MoneyHumaniser(auction.Bid)</td>
+                <td>@auction.Quantity</td>
+                <td>@auction.TimeLeft</td>
+                <td>@auction.Category</td>
+                <td>@auction.SubCategory</td>
+            </tr>
+        }
     </table>
+
+    <p align="center">
+        @for (int i = 0; i < Model.totalPages; i++)
+        {
+            var i1 = i;
+            if (i == Model.currentPage)
+            {
+                <b>@(i1 + 1)</b>
+            }
+            else
+            {
+                <a asp-controller="Auction" asp-route-realmId="@Model.realmId" asp-route-page="@i1">@(i1 + 1)</a>
+            }
+        }
+    </p>
+
 </div>
 </body>
 </html>

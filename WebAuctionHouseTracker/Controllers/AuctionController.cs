@@ -11,26 +11,39 @@ public class AuctionController : Controller
 {
     private IAuctionSlots _auction;
 
-
     public AuctionController(IAuctionSlots auctionSlots)
     {
         _auction = auctionSlots;
     }
     
     // GET
-    public IActionResult Index(long realmId, int page)
+    public IActionResult Index(long realmId, int page, string? itemName)
     {
-        Console.WriteLine($"realmId: {realmId}, page: {page}");
+        if (itemName != "" && itemName != null)
+        {
+            return View(new AuctionSlotModel()
+            {
+                AuctionSlots = _auction.PaginateFilterByName(page, realmId, itemName),
+                totalPages = _auction.GetPagesAmount(realmId, itemName),
+                currentPage = page,
+                realmId = realmId,
+                itemName = itemName
+            });
 
-        var timer = DateTime.Now;
-        _auction.PaginateById(0);
-        Console.WriteLine($"TIME SPENT TO PAGINATE: {DateTime.Now - timer}");
 
-        // List<AuctionSlot> result = _auction.GetAll(realmId);
-        List<AuctionSlot> result = new List<AuctionSlot>();
-        //TODO Paginator
+        }
         
+        var timer = DateTime.Now;
+        List<AuctionSlot> result = _auction.PaginateById(page, realmId);
+
         // return View(_auction.GetNonCommodities(realmId));
-        return View(result);
+        return View(new AuctionSlotModel()
+        {
+            AuctionSlots = result,
+            totalPages = _auction.GetPagesAmount(realmId),
+            currentPage = page,
+            realmId = realmId,
+            itemName = itemName
+        });
     }
 }

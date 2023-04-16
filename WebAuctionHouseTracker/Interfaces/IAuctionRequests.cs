@@ -14,4 +14,6 @@ public interface IAuctionRequests
     public Task<List<CommodityInfo>> GetCommodityInfos();
     public Task<List<NonCommodityInfo>> GetNonCommodityInfos(string realmId);
     public List<WowAuthenticatorRecords.RealmData> GetRealmNames();
+    public Dictionary<string, List<WowAuthenticatorRecords.RealmData>> GetConnectedRealms();
+    public List<WowAuthenticatorRecords.RealmData> GetConnectedRealm(string connectedRealmId);
 }

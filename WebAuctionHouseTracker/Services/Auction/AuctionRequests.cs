@@ -43,7 +43,49 @@ public class AuctionRequests : IAuctionRequests
 
         return client.Get<WowAuthenticatorRecords.Realms>(request).realms;
     }
+
+    public List<WowAuthenticatorRecords.RealmData> GetConnectedRealm(string connectedRealmId)
+    {
+        var options = new RestClientOptions(_baseUrl)
+            { Authenticator = new OAuth2AuthorizationRequestHeaderAuthenticator(_token, "Bearer") };
+        var client = new RestClient(options);
+        var request = new RestRequest($"/data/wow/connected-realm/{connectedRealmId}");
+        request.AddParameter("namespace", $"dynamic-{_region}");
+        request.AddParameter("locale", _locale);
+        
+        var response = client.Get<WowAuthenticatorRecords.ConnectedRealmsIndex>(request);
+
+        return response?.Realms ?? new List<WowAuthenticatorRecords.RealmData>();
+    }
     
+    public Dictionary<string, List<WowAuthenticatorRecords.RealmData>> GetConnectedRealms()
+    {
+        var options = new RestClientOptions(_baseUrl)
+            { Authenticator = new OAuth2AuthorizationRequestHeaderAuthenticator(_token, "Bearer") };
+        var client = new RestClient(options);
+        var request = new RestRequest($"data/wow/connected-realm/index");
+        request.AddParameter("namespace", $"dynamic-{_region}");
+        request.AddParameter("locale", _locale);
+
+        var realmDatas = client.Get<WowAuthenticatorRecords.ConnectedRealms>(request);
+        var realmdIds = realmDatas?.connectedRealms.Select(
+            x => x.Values.First().Substring(53,4).Replace("?","")).ToList();
+
+        Dictionary<string, List<WowAuthenticatorRecords.RealmData>> result =
+            new Dictionary<string, List<WowAuthenticatorRecords.RealmData>>();
+
+        foreach (var connectedRealmId in realmdIds)
+        {
+            request.Resource = $"/data/wow/connected-realm/{connectedRealmId}";
+
+            var response = client.Get<WowAuthenticatorRecords.ConnectedRealmsIndex>(request);
+            
+            result.Add(connectedRealmId, response.Realms);
+        }
+
+        return result;
+    }
+
     public async Task<List<WowAuthenticatorRecords.AuctionSlotNonCommodity>> GetNonCommodities(string realmId)
     {
         //NB!!! Result of this will be unique for each realm! Only commodities are cross-realm!
@@ -55,12 +97,6 @@ public class AuctionRequests : IAuctionRequests
         request.AddParameter("locale", _locale);
 
         var answer = client.Get<Dictionary<string,Object>>(request);
-
-        Console.WriteLine("AAAA");
-        Console.WriteLine("AAAA");
-        Console.WriteLine("AAAA");
-        Console.WriteLine("AAAA");
-        Console.WriteLine(JsonSerializer.Serialize(answer));
 
         var result = (await client.GetAsync<WowAuthenticatorRecords.AuctionRequestNonCommodity>(request))?.AuctionSlots
                      ?? new List<WowAuthenticatorRecords.AuctionSlotNonCommodity>();

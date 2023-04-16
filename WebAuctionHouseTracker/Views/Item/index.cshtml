@@ -1,0 +1,117 @@
+﻿@using WebApplication1.Utils
+@model WebApplication1.Models.Web.ItemModel
+@{
+    List<string> test = new List<string>();
+
+    foreach (var aslot in Model.AuctionSlots)
+    {
+        test.Add($"[new Date({aslot.TimeStamp.Year},{aslot.TimeStamp.Month},{aslot.TimeStamp.Day},{aslot.TimeStamp.Hour}),  {aslot.Price/10000}.{aslot.Price%10000}]");
+    }
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>title</title>
+
+    
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+        <script type="text/javascript">
+    
+          // Load the Visualization API and the corechart package.
+          google.charts.load('current', {'packages':['corechart']});
+    
+          // Set a callback to run when the Google Visualization API is loaded.
+          google.charts.setOnLoadCallback(drawChart);
+    
+          // Callback that creates and populates a data table,
+          // instantiates the pie chart, passes in the data and
+          // draws it.
+          function drawChart() {
+                  var data = google.visualization.arrayToDataTable([
+                    ['Time', 'Price'],
+                    @(String.Join(",", test))
+                  ]);
+                  var options = {
+                    // backgroundColor: '#222222',
+                    backgroundColor: {
+                        'fill': '#222222',
+                        'stroke': '#FFFFFF',
+                        'strokeWidth': 5
+                    },
+                    hAxis:{
+                        title: 'Time',
+                        format: 'yy.MM.dd \n HH:mm',
+                        textStyle: {
+                            color: '#d9d9d9'
+                        },
+                        titleTextStyle:{
+                            color: '#FFFFFF'
+                        }
+                    },
+                    vAxis:{
+                        title: 'Price (gold)',
+                        textStyle: {
+                            color: '#d9d9d9'
+                        },
+                        titleTextStyle:{
+                            color: '#FFFFFF'
+                        }
+                    },
+                    legend: {
+                        textStyle: {
+                            color: '#ffffff'
+                        }
+                    },
+                    titleTextStyle: {
+                        color: '#ffffff'
+                    },
+                    colors: ['#ef4e4e'],
+                    lineWidth: 3
+                  };
+                  var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
+                  chart.draw(data, options);
+               }
+        </script>
+        
+        <script>const wowhead_tooltips = { "colorlinks": true, "iconizelinks": true, "renamelinks": false }</script>
+        <script src="https://wow.zamimg.com/js/tooltips.js"></script>
+</head>
+<body>
+<h1><a href="#" data-wh-icon-size="medium" data-wowhead="item=@Model.ItemId">@Model.AuctionSlots.First().Name</a></h1>
+
+
+<div id="curve_chart" style="width: 1200px; height: 500px"></div>
+
+
+<table width="1200px" class="table-bordered">
+    <tr>
+        <th width="15%">Price</th>
+        <th width="15%">Bid</th>
+        <th width="7%">Quantity</th>
+        <th width="15%">Time Left</th>
+        <th width="15%">Auction Scan Time</th>
+        <th>Category</th>
+        <th>Subcategory</th>
+    </tr>
+
+    @foreach (var auction in Model.AuctionSlots)
+    {
+        <tr>
+            <td align="right">@AuctionSlotHelper.MoneyHumaniser(auction.Price)</td>
+            <td align="right">@AuctionSlotHelper.MoneyHumaniser(auction.Bid)</td>
+            <td>@auction.Quantity</td>
+            <td>@auction.TimeLeft</td>
+            <td>@auction.TimeStamp</td>
+            <td>@auction.Category</td>
+            <td>@auction.SubCategory</td>
+        </tr>
+    }
+</table>
+
+<div>
+
+</div>
+</body>
+</html>

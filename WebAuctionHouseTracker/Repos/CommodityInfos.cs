@@ -30,7 +30,7 @@ public class CommodityInfos
     {
         // Use non-async version to prevent  
         int counter = 0;
-
+        //TODO!!! Rework, try to check by list if objects already in database...
 
         for (int i = 0; i < commodityInfoList.Count; i++)
         {
@@ -38,6 +38,7 @@ public class CommodityInfos
 
             if (alreadyInDatabase)
             {
+                //TODO!! REPLACE WITH LOGGER!!!!
                 Console.WriteLine($"{commodityInfoList[i].Id} already in database, updating...");
                 _dbContext.CommodityInfos.Update(commodityInfoList[i]);
             }

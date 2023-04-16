@@ -33,7 +33,7 @@ public class ApplicationDbContext : IdentityDbContext
         //     .HasForeignKey(x => x.CommodityId);
 
         modelBuilder.Entity<NonCommodityAuction>()
-            .HasKey(x => new{ NonCommodityId = x.ItemId,x.TimeStamp});
+            .HasKey(x => new{ NonCommodityId = x.ItemId,x.TimeStamp,x.RealmId});
 
         modelBuilder.Entity<NonCommodityInfo>()
             .HasKey(x => x.Id);

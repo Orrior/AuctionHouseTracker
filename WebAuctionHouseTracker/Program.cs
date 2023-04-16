@@ -33,7 +33,7 @@ builder.Services.AddAutoMapper(typeof(AuctionMappingProfile));
 
 // Add Background Services.
 //TODO!!!! Uncomment this!
-// builder.Services.AddHostedService<ItemInfoService>();
+builder.Services.AddHostedService<ItemInfoService>();
 builder.Services.AddHostedService<ItemPriceRequestService>();
 
 var app = builder.Build();

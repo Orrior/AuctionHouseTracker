@@ -117,10 +117,31 @@ public abstract class WowAuthenticatorRecords
     }
     public record RealmData
     {
+        [JsonPropertyName("slug")]
+        public string Slug { get; init; }
+        
         [JsonPropertyName("name")]
         public string Name { get; init; }
         
         [JsonPropertyName("id")]
         public long id { get; init; }
+    }
+
+    public record ConnectedRealms
+    {
+        [JsonPropertyName("connected_realms")]
+        public List<Dictionary<string,string>> connectedRealms { get; init; }
+    }
+
+    public record ConnectedRealmsIndex
+    {
+        [JsonPropertyName("realms")]
+        public List<RealmData> Realms { get; init; }
+    }
+    
+    public record ConnectedRealmData
+    {
+        [JsonPropertyName("href")]
+        public string href { get; init; }
     }
 }

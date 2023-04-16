@@ -12,14 +12,14 @@ namespace WebApplication1.Controllers;
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
-    private readonly List<WowAuthenticatorRecords.RealmData> _allRealms;
     private readonly List<string> _realms;
+    private readonly IAuctionRequests _auctionRequests;
 
     public HomeController(ILogger<HomeController> logger, IAuctionRequests auctionRequests, IConfiguration configuration)
     {
         _logger = logger;
-        _allRealms = auctionRequests.GetRealmNames();
-        _realms = SettingsHelper.parseRealms(configuration["RequestParameters:RealmId"]) ;
+        _realms = SettingsHelper.parseRealms(configuration["RequestParameters:RealmId"]);
+        _auctionRequests = auctionRequests;
     }
 
     public IActionResult Index()
@@ -32,30 +32,23 @@ public class HomeController : Controller
             realmsAreSet = true;
             foreach (var realm in _realms)
             {
-                var realmItem = _allRealms.Find(x => x.id.ToString() == realm);
-
-                if (realmItem != null)
+                var connectedRealms = _auctionRequests.GetConnectedRealm(realm);
+                
+                if (connectedRealms.Count != 0)
                 {
-                    realms.Add(realm, realmItem.Name);
+                    realms.Add(realm, String.Join(", ", connectedRealms.Select(x => x.Name).ToList()));
                 }
             }
         }
         else
         {
             realmsAreSet = false;
-            foreach (var realm in _allRealms)
+            foreach (var realm in _auctionRequests.GetConnectedRealms())
             {
-                realms.Add(realm.id.ToString(),realm.Name);
+                realms.Add(realm.Key ,String.Join(", ",realm.Value.Select(x => x.Name).ToList()));
             }
         }
-
         
-        
-        Console.WriteLine($"_Realms count: {_realms.Count}");
-        Console.WriteLine(JsonSerializer.Serialize(_realms));
-        Console.WriteLine($"RealmsAreSet: {realmsAreSet.ToString()}");
-
-
         return View(new RealmsModel{Realms = realms, RealmsAreSet = realmsAreSet});
     }
 

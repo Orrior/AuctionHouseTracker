@@ -38,44 +38,44 @@ public class ItemInfoService : BackgroundService
             var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
             
             //TODO!!! should we combine GetCommodityInfos and AddOrUpdateRange in one method so it will instantly add item in database instead of memory bloating?.
-                
-            //Scan all commodity items and add them to DB
-            _logger.LogInformation("Start scanning commodities...");
-            var commodityInfos = await _auctionRequests.GetCommodityInfos();
-            var timer2 = DateTime.Now;
-            _logger.LogInformation("Start saving commodities items info...");
-            new CommodityInfos(context).AddOrUpdateRange(commodityInfos);
-            var timer3 = DateTime.Now;
-            _logger.LogInformation($"TOTAL COMINFOS IN DATABASE:{context.CommodityInfos.Count()}");
-            _logger.LogInformation("Commodities items are successfully saved!");
+            // Scan all commodity items and add them to DB
+             _logger.LogInformation("Start scanning commodities...");
+             var commodityInfos = await _auctionRequests.GetCommodityInfos();
+             var timer2 = DateTime.Now;
+             _logger.LogInformation("Start saving commodities items info...");
             
-            commodityInfos.Clear(); // make list eligible for GC.
-            commodityInfos.TrimExcess(); // reallocates list memory.
+             new CommodityInfos(context).AddOrUpdateRange(commodityInfos);
+             var timer3 = DateTime.Now;
+             _logger.LogInformation($"TOTAL COMINFOS IN DATABASE:{context.CommodityInfos.Count()}");
+             _logger.LogInformation("Commodities items are successfully saved!");
             
-            //TODO! DateTime.Now;e's no realms mentioned in config this code still will go and not make any warn?
-            //TODO! otherwise, add check in the beginning of the task so it will check whether realms assigned in config or not.
-            _logger.LogInformation("Start scanning non-commodities...");
-            var nonCommodityInfos = await _auctionRequests.GetNonCommodityInfos(_realms[0]);
-            _logger.LogInformation("Non-commodities scanning is finished!");
-            var timer4 = DateTime.Now;
-            _logger.LogInformation("Start saving non-commodities items info...");
-            new NonCommodityInfos(context).AddOrUpdateRange(nonCommodityInfos);
-            _logger.LogInformation($"TOTAL NONCOMINFOS IN DATABASE:{context.NonCommodityInfos.Count()}");
-            _logger.LogInformation("Non-commodities items are successfully saved!");
+             commodityInfos.Clear(); // make list eligible for GC.
+             commodityInfos.TrimExcess(); // reallocates list memory.
             
-            nonCommodityInfos.Clear(); // make list eligible for GC.
-            nonCommodityInfos.TrimExcess(); // reallocates list memory.
+             //TODO! DateTime.Now;e's no realms mentioned in config this code still will go and not make any warn?
+             //TODO! otherwise, add check in the beginning of the task so it will check whether realms assigned in config or not.
+             _logger.LogInformation("Start scanning non-commodities...");
+             var nonCommodityInfos = await _auctionRequests.GetNonCommodityInfos(_realms[0]);
+             _logger.LogInformation("Non-commodities scanning is finished!");
+             var timer4 = DateTime.Now;
+             _logger.LogInformation("Start saving non-commodities items info...");
+             new NonCommodityInfos(context).AddOrUpdateRange(nonCommodityInfos);
+             _logger.LogInformation($"TOTAL NONCOMINFOS IN DATABASE:{context.NonCommodityInfos.Count()}");
+             _logger.LogInformation("Non-commodities items are successfully saved!");
             
-            var timer5 = DateTime.Now;
-            _logger.LogInformation("===TOTAL SAVED=== " + 
-                                   $"\r\n commodities:{context.CommodityInfos.Count()} items" + 
-                                   $"\r\n non-commodities: {context.NonCommodityInfos.Count()} items " +
-                                    "\r\n ===TIME ELAPSED=== " +
-                                   $"\r\n Getting commodities from API: {timer2 - timer1}" +
-                                   $"\r\n Saving commodities: {timer3 - timer2}" +
-                                   $"\r\n Getting non-commodities from API: {timer4 - timer3}" +
-                                   $"\r\n Saving non-commodities: {timer5 - timer4}" +
-                                   $"\r\n TOTAL TIME ELAPSED: {timer5 - timer1}");
+             nonCommodityInfos.Clear(); // make list eligible for GC.
+             nonCommodityInfos.TrimExcess(); // reallocates list memory.
+            
+             var timer5 = DateTime.Now;
+             _logger.LogInformation("===TOTAL SAVED=== " + 
+                                    $"\r\n commodities:{context.CommodityInfos.Count()} items" + 
+                                    $"\r\n non-commodities: {context.NonCommodityInfos.Count()} items " +
+                                     "\r\n ===TIME ELAPSED=== " +
+                                    $"\r\n Getting commodities from API: {timer2 - timer1}" +
+                                    $"\r\n Saving commodities: {timer3 - timer2}" +
+                                    $"\r\n Getting non-commodities from API: {timer4 - timer3}" +
+                                    $"\r\n Saving non-commodities: {timer5 - timer4}" +
+                                    $"\r\n TOTAL TIME ELAPSED: {timer5 - timer1}");
 
              await Task.Delay(86_400_000 * 7, stoppingToken);
         }

@@ -12,7 +12,7 @@ migrationBuilder.Sql(
 
 migrationBuilder.Sql(
 "SELECT create_hypertable( '\"NonCommodityAuctions\"', 'TimeStamp');\n" +
-"CREATE INDEX ix_noncommodity_timestamp ON \"NonCommodityAuctions\" (\"ItemId\", \"TimeStamp\" DESC)"
+"CREATE INDEX ix_noncommodity_timestamp ON \"NonCommodityAuctions\" (\"ItemId\", \"TimeStamp\", \"RealmId\" DESC)"
 );
 
 3. Update Database
