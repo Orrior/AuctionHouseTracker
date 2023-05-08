@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using WebApplication1.Models;
+using WebApplication1.Models.Auctions;
 using WebApplication1.Utils;
 
 namespace WebApplication1.Mapping;
@@ -8,7 +8,6 @@ public class AuctionMappingProfile : Profile
 {
     public AuctionMappingProfile()
     {
-        //TODO! Map AuctionSlotCommodity to CommodityAuction etc.
         CreateMap<WowAuthenticatorRecords.AuctionSlotCommodity, CommodityAuction>()
             .ForMember(dest => dest.ItemId,
                 b => b.MapFrom(

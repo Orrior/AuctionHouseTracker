@@ -1,9 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
-using WebApplication1.Interfaces;
+﻿using WebApplication1.Interfaces;
 
-namespace WebApplication1.Models;
+namespace WebApplication1.Models.Auctions;
 
-public class NonCommodityInfo : IBasicAuction.IAuctionInfo
+public class NonCommodityInfo : BasicAuction.IAuctionInfo
 {
     //TODO!!! Maybe long, not int?
     public long Id { get; set; }
@@ -12,7 +11,7 @@ public class NonCommodityInfo : IBasicAuction.IAuctionInfo
     public string ItemSubClass { get; set; } = "";
 }
 
-public class NonCommodityAuction : IBasicAuction.IAuctionSlot
+public class NonCommodityAuction : BasicAuction.IAuctionSlot
 {
     public long RealmId { get; set; }
     public long ItemId { get; set; }

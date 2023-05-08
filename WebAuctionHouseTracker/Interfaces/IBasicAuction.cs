@@ -1,6 +1,6 @@
 ﻿namespace WebApplication1.Interfaces;
 
-public abstract class IBasicAuction
+public abstract class BasicAuction
 {
     public interface IAuctionInfo
     {

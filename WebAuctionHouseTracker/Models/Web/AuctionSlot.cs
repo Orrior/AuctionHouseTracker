@@ -1,9 +1,11 @@
-﻿namespace WebApplication1.Models.Web;
+﻿using WebApplication1.Models.Auctions;
+
+namespace WebApplication1.Models.Web;
 
 public class AuctionSlot
 {
     public long ItemId { get; set; }
-    public string Name { get; set; }
+    public string Name { get; set; } = default!;
 
     public long RealmId { get; set; }
     public bool IsCommodity { get; set; }
@@ -13,10 +15,10 @@ public class AuctionSlot
     
     public long Quantity { get; set; }
     
-    public string Category { get; set; }
-    public string SubCategory { get; set; }
+    public string Category { get; set; } = default!;
+    public string SubCategory { get; set; } = default!;
 
-    public string TimeLeft { get; set; }
+    public string TimeLeft { get; set; } = default!;
     
     public DateTime TimeStamp { get; set; }
 
@@ -59,6 +61,5 @@ public class AuctionSlot
 
     public AuctionSlot()
     {
-
     }
 }

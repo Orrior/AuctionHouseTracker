@@ -1,4 +1,4 @@
-﻿using WebApplication1.Models;
+﻿using WebApplication1.Models.Auctions;
 using WebApplication1.Utils;
 
 namespace WebApplication1.Interfaces;

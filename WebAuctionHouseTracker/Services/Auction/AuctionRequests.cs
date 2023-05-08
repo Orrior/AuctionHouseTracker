@@ -4,6 +4,7 @@ using RestSharp;
 using RestSharp.Authenticators.OAuth2;
 using WebApplication1.Interfaces;
 using WebApplication1.Models;
+using WebApplication1.Models.Auctions;
 using WebApplication1.Utils;
 
 namespace WebApplication1.Services.Auction;
@@ -88,7 +89,6 @@ public class AuctionRequests : IAuctionRequests
 
     public async Task<List<WowAuthenticatorRecords.AuctionSlotNonCommodity>> GetNonCommodities(string realmId)
     {
-        //NB!!! Result of this will be unique for each realm! Only commodities are cross-realm!
         var options = new RestClientOptions(_baseUrl)
             { Authenticator = new OAuth2AuthorizationRequestHeaderAuthenticator(_token, "Bearer") };
         var client = new RestClient(options);
@@ -96,12 +96,9 @@ public class AuctionRequests : IAuctionRequests
         request.AddParameter("namespace", $"dynamic-{_region}");
         request.AddParameter("locale", _locale);
 
-        var answer = client.Get<Dictionary<string,Object>>(request);
-
         var result = (await client.GetAsync<WowAuthenticatorRecords.AuctionRequestNonCommodity>(request))?.AuctionSlots
                      ?? new List<WowAuthenticatorRecords.AuctionSlotNonCommodity>();
-
-
+        
         return result;
     }
 
@@ -151,7 +148,6 @@ public class AuctionRequests : IAuctionRequests
 
         var dict = new Dictionary<long, WowAuthenticatorRecords.AuctionSlotCommodity>();
 
-        //TODO! Premature optimisation is the root of all evil.
         foreach (var commodity in allCommodities)
         {
             var itemId = commodity.Item.Id;
@@ -169,7 +165,6 @@ public class AuctionRequests : IAuctionRequests
         return dict.Values.ToList();
     }
 
-    //TODO!
     public async Task<List<CommodityInfo>> GetCommodityInfos() {
         
         //TODO Remove range copy!
@@ -221,7 +216,7 @@ public class AuctionRequests : IAuctionRequests
         return response;
     }
 
-    public async Task<List<WowAuthenticatorRecords.ItemInfo>> GetItemInfos(List<long> itemIds)
+    public Task<List<WowAuthenticatorRecords.ItemInfo>> GetItemInfos(List<long> itemIds)
 
     {
         var options = new RestClientOptions(_baseUrl)
@@ -233,8 +228,7 @@ public class AuctionRequests : IAuctionRequests
         var request = new RestRequest();
         request.AddParameter("namespace", $"static-{_region}");
         request.AddParameter("locale", _locale);
-
-        //TODO!!! Add speed check.
+        
         for (int i = 0; i < itemIds.Count; i++)
         {
             var itemId = itemIds[i];
@@ -267,6 +261,6 @@ public class AuctionRequests : IAuctionRequests
             _logger.LogDebug($"PROGRESS: {i + 1}/{itemIds.Count}");
         }
         _logger.LogInformation($"Items scanning has finished! Scanned {itemInfos.Count}/{itemIds.Count} items!");
-        return itemInfos;
+        return Task.FromResult(itemInfos);
     }
 }

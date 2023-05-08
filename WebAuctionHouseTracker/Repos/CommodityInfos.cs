@@ -1,5 +1,6 @@
 ﻿using WebApplication1.Migrations;
 using WebApplication1.Models;
+using WebApplication1.Models.Auctions;
 
 namespace WebApplication1.Repos;
 

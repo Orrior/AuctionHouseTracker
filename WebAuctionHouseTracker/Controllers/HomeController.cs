@@ -1,23 +1,18 @@
 ﻿using System.Diagnostics;
-using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using WebApplication1.Interfaces;
-using WebApplication1.Models;
 using WebApplication1.Models.Web;
-using WebApplication1.Services.Auction;
 using WebApplication1.Utils;
 
 namespace WebApplication1.Controllers;
 
 public class HomeController : Controller
 {
-    private readonly ILogger<HomeController> _logger;
     private readonly List<string> _realms;
     private readonly IAuctionRequests _auctionRequests;
 
-    public HomeController(ILogger<HomeController> logger, IAuctionRequests auctionRequests, IConfiguration configuration)
+    public HomeController(IAuctionRequests auctionRequests, IConfiguration configuration)
     {
-        _logger = logger;
         _realms = SettingsHelper.parseRealms(configuration["RequestParameters:RealmId"]);
         _auctionRequests = auctionRequests;
     }

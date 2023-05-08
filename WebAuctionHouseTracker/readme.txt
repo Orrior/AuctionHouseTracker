@@ -18,6 +18,12 @@ migrationBuilder.Sql(
 3. Update Database
 dotnet ef database update
 
+4. If you don't know connected realm id of your realm, leave "realms" field empty.
+This way it'll display all available connected realms with their ids on the main page.
+
+5. docker-compose up
+
+
 ===DEBUG===
 IF “Npgsql: 42883: function create_hypertable(…) does not exist” appears send SQL query:
 CREATE EXTENSION IF NOT EXISTS timescaledb CASCADE;

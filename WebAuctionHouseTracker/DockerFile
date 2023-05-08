@@ -1,0 +1,28 @@
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+WORKDIR /WebAuctionHouseTracker
+EXPOSE 80
+
+# copy csproj and restore as distinct layers
+COPY *.props .
+COPY *.sln .
+COPY *.csproj ./
+
+# Restore as distinct layers
+RUN dotnet restore
+
+# copy everything else and build app
+COPY . ./
+WORKDIR /WebAuctionHouseTracker
+
+# Build and publish a release
+RUN dotnet publish -c Release -o out
+
+# Build runtime image
+FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS runtime
+WORKDIR /WebAuctionHouseTracker
+EXPOSE 80
+COPY --from=build /WebAuctionHouseTracker/out ./
+ENTRYPOINT ["dotnet", "WebAuctionHouseTracker.dll"]
+
+
+

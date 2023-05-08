@@ -1,9 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using WebApplication1.Interfaces;
-using WebApplication1.Migrations;
 using WebApplication1.Models.Web;
-using WebApplication1.Repos;
 
 namespace WebApplication1.Controllers;
 
@@ -32,8 +29,6 @@ public class AuctionController : Controller
 
 
         }
-        
-        var timer = DateTime.Now;
         List<AuctionSlot> result = _auction.PaginateById(page, realmId);
 
         // return View(_auction.GetNonCommodities(realmId));

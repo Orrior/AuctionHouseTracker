@@ -1,5 +1,6 @@
 ﻿using WebApplication1.Migrations;
 using WebApplication1.Models;
+using WebApplication1.Models.Auctions;
 
 namespace WebApplication1.Repos;
 
@@ -28,14 +29,10 @@ public class NonCommodityInfos
     
     public void AddOrUpdateRange(List<NonCommodityInfo> nonCommodityInfoList)
     {
-        // Use non-async version to prevent  
-        int counter = 0;
-
         for (int i = 0; i < nonCommodityInfoList.Count; i++)
         {
             var alreadyInDatabase = _dbContext.NonCommodityInfos.Any(x => x.Id == nonCommodityInfoList[i].Id);
             //TODO!!! Rework, try to check by list if objects already in database...
-            
             
             if (alreadyInDatabase)
             {
@@ -46,8 +43,6 @@ public class NonCommodityInfos
             {
                 _dbContext.NonCommodityInfos.Add(nonCommodityInfoList[i]);
             }
-
-            counter++;
         }
         
         _dbContext.SaveChanges();

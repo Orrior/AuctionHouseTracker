@@ -1,103 +1,70 @@
 ﻿using AutoMapper;
 using WebApplication1.Interfaces;
 using WebApplication1.Migrations;
-using WebApplication1.Models;
 using WebApplication1.Utils;
-using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace WebApplication1.Services.BackgroundServices;
 
-public class ItemPriceRequestService : BackgroundService
+public class ItemPriceService : BackgroundService
 {
-    private readonly ILogger<ItemPriceRequestService> _logger;
-    private readonly IConfiguration _configuration;
+    private readonly ILogger<ItemPriceService> _logger;
     private readonly IServiceScopeFactory _serviceScopeFactory;
     private readonly IMapper _mapper;
-
-    private string _region;
-    private string[] _realms;
-    private string _locale;
+    private readonly string[] _realms;
     
-    private string token = "";
     private readonly IAuctionRequests _auctionRequests;
     
-    public ItemPriceRequestService(ILogger<ItemPriceRequestService> logger, IConfiguration configuration, IServiceScopeFactory serviceScopeFactory, IMapper mapper, IAuctionRequests auctionRequests)
+    public ItemPriceService(ILogger<ItemPriceService> logger, IConfiguration configuration, IServiceScopeFactory serviceScopeFactory, IMapper mapper, IAuctionRequests auctionRequests)
     {
         _logger = logger;
-        _configuration = configuration;
         _mapper = mapper;
-        // Create Scoped Contexts in Singleton.
         _serviceScopeFactory = serviceScopeFactory;
         _auctionRequests = auctionRequests;
-
-        _region = _configuration["RequestParameters:Region"];
-        _realms = _configuration["RequestParameters:RealmId"].Trim().Split(",");
-        _locale = _configuration["RequestParameters:Locale"];
+        
+        _realms = configuration["RequestParameters:RealmId"].Trim().Split(",");
     }   
     
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        _logger.LogInformation("Starting {jobName}", nameof(ItemPriceRequestService));
-        var timer1 = DateTime.Now;
-        var timer2 = DateTime.Now;
+        _logger.LogInformation("Starting {JobName}", nameof(ItemPriceService));
+        if (string.IsNullOrWhiteSpace(_realms[0]))
+        {
+            _logger.LogError("Can't get any realms to scan auction Prices! " +
+                             "Please fill in connected-realm ids in \"RealmId\", " +
+                             "using comma as delimiter in appsettings.json and restart the application");
+            return;
+        }
+        
         while (!stoppingToken.IsCancellationRequested)
         {
-            timer1 = DateTime.Now;
+            var t1 = DateTime.Now;
+            
             _logger.LogInformation("Starting price lists update...");
-            
-            //Create scope and DB
             await using var scope = _serviceScopeFactory.CreateAsyncScope();
+
+            //Create scope and DB
             var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-            var time = DateTime.Now;
-            var timeStamp = new DateTime(time.Year, time.Month, time.Day, time.Hour, 0, 0, 0);
-            
-            //TODO UNCOMMENT!!!
-            
-            //scan commodities
-            var commodities = _auctionRequests.GetCheapestCommodities().Result
-                .Select(x => _mapper.Map<CommodityAuction>(x)).ToList();
-            
-            commodities.ForEach(x => x.TimeStamp = timeStamp);
-            
-            _logger.LogDebug("Commodities prices are saved!");
-            
-            //save commodities
-            await context.CommodityAuctions.AddRangeAsync(commodities);
-            await context.SaveChangesAsync();
+            var timeStamp = new DateTime(t1.Year, t1.Month, t1.Day, t1.Hour, 0, 0, 0, DateTimeKind.Utc);
 
-            commodities.Clear();
-            commodities.TrimExcess();
-
-            //start for-loop for each region to be scanned and saved.
+            //Check if scan was made already.
+            if (context.CommodityAuctions.Any(x => x.TimeStamp == timeStamp)) 
+            {
+                _logger.LogError("Scan was made already recently, skipping cycle to the next hour...");
+                await Task.Delay(3_600_000, stoppingToken);
+                continue; 
+            }
+        
+            ItemPriceServiceHelper.ScanCommodityPrices(context, _auctionRequests, _mapper, timeStamp);
+            
             foreach (var realmId in _realms)
             {
-                _logger.LogInformation($"Scanning non-commodities for realm with id {realmId}...");
-                
-                //TODO!! Add method for this in AuctionRequests, аand assign realm.
-                var nonCommodities = _auctionRequests.GetCheapestNonCommodities(realmId).Result
-                    .Select(x => _mapper.Map<NonCommodityAuction>(x)).ToList();
-
-                nonCommodities.ForEach(x => x.TimeStamp = timeStamp);
-
-                Console.WriteLine(nonCommodities.Count);
-                
-                await context.NonCommodityAuctions.AddRangeAsync(nonCommodities);
-                await context.SaveChangesAsync();
-                
-                
-                
-                _logger.LogDebug($"Non-commodities prices for id '{realmId}' are saved!");
-                timer2 = DateTime.Now;
+                ItemPriceServiceHelper.ScanNonCommodityPrices(context, _auctionRequests, _mapper, timeStamp, realmId);
+                _logger.LogInformation("Connected realm with id {RealmId} was scanned successfully!", realmId);
             }
+
+            _logger.LogInformation("===TOTAL SAVED===\r\n Prices saved in {Timer}! Next scan will be in 1 hour", 
+                DateTime.Now - t1);
             
-            
-            
-            
-            
-            _logger.LogInformation($"===TOTAL SAVED=== " + 
-                                   $"\r\n commodities:{context.CommodityAuctions.Count()} items" + 
-                                   $"\r\n non-commodities: {context.NonCommodityAuctions.Count()} items " +
-                                   $"\r\n All prices are saved in {timer2-timer1}! Next scan will be in 1 hour.");
             await Task.Delay(3_600_000, stoppingToken);
         }
     }
