@@ -1,4 +1,11 @@
-﻿Prepare Database!
+Configure appsettings.json!
+
+1. https://develop.battle.net/access/ and create new Client.
+2. Enter credentials in OAuth2Credentials -> ClientId/ClientSecret fields.
+3. Enter your region, RealmID and Locale in "RequestParameters" section.
+NB! If you don't know connected realm id of your realm, wait to step 4. in "prepare Database!" section.
+
+Prepare Database!
 
 1. Create initial migration
 dotnet ef Migrations add Initial
@@ -25,5 +32,5 @@ This way it'll display all available connected realms with their ids on the main
 
 
 ===DEBUG===
-IF “Npgsql: 42883: function create_hypertable(…) does not exist” appears send SQL query:
+If “Npgsql: 42883: function create_hypertable(…) does not exist” appears send SQL query:
 CREATE EXTENSION IF NOT EXISTS timescaledb CASCADE;
